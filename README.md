@@ -65,8 +65,17 @@ npm install gray-matter
 
 > The metadata is what appears as a YAML format inside each blog post.
 
-3. To render markdown content we use the `remark` library:
+10. Create a folder called `lib` in which we'll save JS files that give add-on functionality to the code. In this case we use it to parse the name of our blog posts based on the markdown file. This file can be called whatever you want, but generally `lib` or `utils` is used.
+
+11. Add routes for the dynamic content, for this create a file called `pages/posts/[id].js`; when adding [] to a name Next.js knows it has to replace this name in routing. Next implement `getStaticPaths()` which returns an array of possible values for `id` and after this `getStaticProps()` which fetches necessary data for the post with `id`.
+
+12. To render markdown content we use the `remark` library:
 
 ``` shell
 npm install remark remark-html
+```
+13. To format the dates that appear throughout the code use the `date-fns` library:
+
+``` shell
+npm install date-fns
 ```
