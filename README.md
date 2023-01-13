@@ -15,67 +15,67 @@ What follows is a list of steps to create a NextJS website, this personal guide 
 
 1. The first thing to do is to import the starter repo to [learn Next.js](https://nextjs.org/learn).
 
-``` shell
-npx create-next-app@latest nextjs-blog --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
-```
+    ``` shell
+    npx create-next-app@latest nextjs-blog --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
+    ```
 
->  It uses this template through the `--example` flag.
+    >  It uses this template through the `--example` flag.
 
-If the previous command doesn't download the required packages—it should—execute:
+    If the previous command doesn't download the required packages—it should—execute:
 
-``` shell
-npm install
-```
+    ``` shell
+    npm install
+    ```
 
-> Remember that to run npm commands you have to download [NodeJS](https://nodejs.org/en/).
+    > Remember that to run npm commands you have to download [NodeJS](https://nodejs.org/en/).
 
 2. Routing is simplified with Next.js, URLs take the name of the JS file in which they are located and remove the ending `.js`. To link between pages of our site we use the `<Link href="...">` element. This element enables client-side navigation and automatically prefetches the code for the linked page in the background.
 
-> When linking to an external website we use the normal `<a href='...'>` tag.
+    > When linking to an external website we use the normal `<a href='...'>` tag.
 
-4. We add images and static files into the `public` directory located in the project's root. When we call this in our code we use the `<Image>` tag which comes with a couple of useful optimizations, this comes from the `'next/image'` library.
+3. We add images and static files into the `public` directory located in the project's root. When we call this in our code we use the `<Image>` tag which comes with a couple of useful optimizations, this comes from the `'next/image'` library.
 
-5. To manage our site's metadata we use the `<Head>` tag and inside of this tag we write metadata as we normally would in HTML. This tag comes from the `'next/head'` library.
+4. To manage our site's metadata we use the `<Head>` tag and inside of this tag we write metadata as we normally would in HTML. This tag comes from the `'next/head'` library.
 
-6. To run third-party JS we use the [`<Script>`](https://nextjs.org/docs/basic-features/script) tag which comes from the `'next/script'` library. This allows us to control how scripts run in a simplified way.
+5. To run third-party JS we use the [`<Script>`](https://nextjs.org/docs/basic-features/script) tag which comes from the `'next/script'` library. This allows us to control how scripts run in a simplified way.
 
-7. Styling is simple, but you need to make some considerations. CSS Modules are files that end in `.module.css`, this allows you to import CSS files in a React component and helps avoid class name collisions. To load global CSS you need to create a file called `pages/_app.js`, this page's default export is a top-level React component that wraps all the pages in your application. Once you have the global component create a global CSS file in `styles/global.css`, this file need to be imported into `pages/_app.js`.
+6. Styling is simple, but you need to make some considerations. CSS Modules are files that end in `.module.css`, this allows you to import CSS files in a React component and helps avoid class name collisions. To load global CSS you need to create a file called `pages/_app.js`, this page's default export is a top-level React component that wraps all the pages in your application. Once you have the global component create a global CSS file in `styles/global.css`, this file need to be imported into `pages/_app.js`.
 
-> The export function in `pages/_app.js` should look like this:
+    > The export function in `pages/_app.js` should look like this:
 
-    ``` js
-    import '../styles/global.css';
+        ``` js
+        import '../styles/global.css';
 
-    export default function App({ Component, pageProps }) {
-    return <Component {...pageProps} />;
-    }
+        export default function App({ Component, pageProps }) {
+        return <Component {...pageProps} />;
+        }
+        ```
+
+    Another option is using utility classes, these come from a file called `styles/utils.module.css`. These style can be re-used accross multiple components and the global stylesheet. This file needs to be imported into the files where you want to apply it.
+
+    > Out of the box, with no configuration, Next.js compiles CSS using PostCSS. To customize PostCSS config, you can create a top-level file called postcss.config.js. This is useful if you're using libraries like Tailwind CSS.
+
+7. You can pre-render data for Static Generation or Server-side Rendering. To do use this functionality export an `async` function called `getStaticProps` or `getServerSideProps(context)`.
+
+8. Now create a folder in the root of our project called `posts`. This folder will hold markdown files to which a YAML metadata section is added. The `grey-matter` library is used to read metadata from our markdown files:
+
+    ``` shell
+    npm install gray-matter
     ```
 
-Another option is using utility classes, these come from a file called `styles/utils.module.css`. These style can be re-used accross multiple components and the global stylesheet. This file needs to be imported into the files where you want to apply it.
+    > The metadata is what appears as a YAML format inside each blog post.
 
-> Out of the box, with no configuration, Next.js compiles CSS using PostCSS. To customize PostCSS config, you can create a top-level file called postcss.config.js. This is useful if you're using libraries like Tailwind CSS.
+9. Create a folder called `lib` in which we'll save JS files that give add-on functionality to the code. In this case we use it to parse the name of our blog posts based on the markdown file. This file can be called whatever you want, but generally `lib` or `utils` is used.
 
-8. You can pre-render data for Static Generation or Server-side Rendering. To do use this functionality export an `async` function called `getStaticProps` or `getServerSideProps(context)`.
+10. Add routes for the dynamic content, for this create a file called `pages/posts/[id].js`; when adding [] to a name Next.js knows it has to replace this name in routing. Next implement `getStaticPaths()` which returns an array of possible values for `id` and after this `getStaticProps()` which fetches necessary data for the post with `id`.
 
-9. Now create a folder in the root of our project called `posts`. This folder will hold markdown files to which a YAML metadata section is added. The `grey-matter` library is used to read metadata from our markdown files:
+11. To render markdown content we use the `remark` library:
 
-``` shell
-npm install gray-matter
-```
+    ``` shell
+    npm install remark remark-html
+    ```
+12. To format the dates that appear throughout the code use the `date-fns` library:
 
-> The metadata is what appears as a YAML format inside each blog post.
-
-10. Create a folder called `lib` in which we'll save JS files that give add-on functionality to the code. In this case we use it to parse the name of our blog posts based on the markdown file. This file can be called whatever you want, but generally `lib` or `utils` is used.
-
-11. Add routes for the dynamic content, for this create a file called `pages/posts/[id].js`; when adding [] to a name Next.js knows it has to replace this name in routing. Next implement `getStaticPaths()` which returns an array of possible values for `id` and after this `getStaticProps()` which fetches necessary data for the post with `id`.
-
-12. To render markdown content we use the `remark` library:
-
-``` shell
-npm install remark remark-html
-```
-13. To format the dates that appear throughout the code use the `date-fns` library:
-
-``` shell
-npm install date-fns
-```
+    ``` shell
+    npm install date-fns
+    ```
