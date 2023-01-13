@@ -79,3 +79,5 @@ What follows is a list of steps to create a NextJS website, this personal guide 
     ``` shell
     npm install date-fns
     ```
+
+13. Create a serverless API route inside this code base, this are lambdas and go inside the `pages/api` folder.
